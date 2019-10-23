@@ -1,0 +1,23 @@
+if GoEstablishLTE():
+        myPostedData = {'customerid' : 100, 'ReportingTime' : '0', 'data' : {'lat' :  '0', 'long' : '0', 'fuel' : '0', 'cabintemp' : '0', 'watertemp' : '0', 'gpstime' : '0'}}
+        try:
+            myPostedData['data']['lat'] = GPSResults['latitude']
+            myPostedData['data']['long'] = GPSResults['longitude']
+            myPostedData['data']['gpstime'] = GPSResults['UTCTime']
+        except:
+            myPostedData['data']['lat'] = "0"
+            myPostedData['data']['long'] = "0"
+            myPostedData['data']['gpstime'] = "0"
+
+        try:
+            myPostedData['data']['cabintemp'] = "{:.2f}".format(SensorTemps[0])
+            myPostedData['data']['watertemp'] = "{:.2f}".format(SensorTemps[1])
+            myPostedData['ReportingTime'] = 110101
+        except:
+            myPostedData['data']['cabintemp'] = "0"
+            myPostedData['data']['watertemp'] = "0"
+
+
+        print("Posting Up " + json.dumps(myPostedData))
+        res = urequest.post('https://kotvwguoia.execute-api.us-east-1.amazonaws.com/Dev/logdata', data=json.dumps(myPostedData))
+        jsonresults = json.loads(res.content)
